@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-Recursion For Coding Interviews (Insights from the Candidate Master - Codeforces) : 
+Recursion For Coding Interviews (Insights from the Candidate Master - Codeforces) :
 
 -- Logical Definition
 -- Way to implement Recursion
