@@ -12,14 +12,12 @@ Recursion For Coding Interviews (Insights from the Candidate Master - Codeforces
 
 // Types of Recursive Problems :
 -- Divide and Conquer 
-    // 1. Factorial 2. Fibonacci 3. Check for Palindromic Strings
+    // 1. Factorial 
+    // 2. Fibonacci 
+    // 3. Check for Palindromic Strings
 -- Backtracking 
-    // This is nothing but implementing the brute force problems in the recursive 
-    // manner. When I mean brute force, you can think of like checking for all 
-    // choices.
-    
-    // 1. N-Queens Problem
-    // 2. Generate all the subsets of the array.
+    // 1. Generate all the subsets of the array.
+    // 2. N-Queens Problem
     
 Logical Definition : 
 Practically, recursion is breaking the larger problem into smaller subproblems.
@@ -96,8 +94,9 @@ Output : 0 1 2 3 4 3 2 3 4
 // TC : O(2^n)
 // SC : O(4)
 
+// (Divide and Conquer Based Recursion Problems) 
 1. Check if the given string is a Palindrome 
-// (Divide and Conquer mode)
+// Note : Factorial and Fibonacci Problems are also Divide and Conquer based.
 
 bool isPalindrome(string s, int i, int j) {
     // Base Case  
@@ -111,424 +110,117 @@ bool isPalindrome(string s, int i, int j) {
 // TC : O(n/2) function calls : O(n)
 // SC : O(n/2) : O(n)
 
-Backtracking Idea :
+// (Backtracking Based Recursion Problems)
 
-Stick to this brilliant framework to solve the backtracking problems.
-LCCMD Framework - (Level, Choice, Check, Move, Decide)
+1. Generate all the subsets of the array (Inputs are distinct).
 
-1. N-Queens Problem 
-
-// Code :
-int n;
-vector<int> queens;
-
-int canPlace(int level, int col) {
-    // We only need to check the rows ABOVE the current 'level'
-    // because rows below haven't been filled yet.
-    for (int prev_row = 0; prev_row < level; prev_row++) {
-        int prev_col = queens[prev_row];
-
-        // 1. Column Check: Is there a queen already in this column?
-        if (prev_col == col) {
-            return 0; 
-        }
-
-        // 2. Diagonal Check:
-        // Math Trick: If the row distance equals the column distance, 
-        // the two queens are on the same diagonal.
-        // |row1 - row2| == |col1 - col2|
-        if (abs(level - prev_row) == abs(col - prev_col)) {
-            return 0; 
-        }
-    }
-
-    // If we passed all checks, it is safe to place the queen here.
-    return 1;
-}
-
-void rec(int level) { // 'level' represents the current Row we are working on
-    
-    // --- PHASE 1: THE BASE CASE ---
-    // This is the "Bottom" of the recursion. When level reaches n, 
-    // it means rows 0, 1, 2, and 3 are all filled.
-    if(level == n) {
-        for(int val : queens) cout << val << " ";
-        cout << endl;
-        return; // This triggers the start of "Climbing Back Up"
-    }
-
-    // --- PHASE 2: THE EXPLORATION ---
-    // Every level (row) tries every column from 0 to n-1. (Choice)
-    for(int col = 0; col < n; col++) {
-        
-        if(canPlace(level, col)) {
-            // 1. PLACE: 
-            queens.push_back(col);
-
-            // 2. RECURSE: 
-            // The code PAUSES here. Level 'x' stays in memory 
-            // and waits for 'level + 1' to finish everything it has to do.
-            rec(level + 1);
-
-            // 3. RESUME & REVERT:
-            // This line is only reached AFTER the deeper call (Level + 1) 
-            // has completely finished its loop or hit the base case.
-            // We "pop_back" to remove our current row's choice so the 
-            // 'for' loop can try the NEXT column index.
-            queens.pop_back(); 
-            
-            // After pop_back, the 'for' loop increments 'col' and 
-            // we try Phase 2 again with a new column.
-        }
-    }
-    
-    // --- PHASE 3: THE EXIT ---
-    // If the 'for' loop finishes (col reaches n), this specific 
-    // instance of 'rec' ends. The computer automatically jumps 
-    // back to the level ABOVE it to resume at its own "Phase 2, Step 3".
-}
-
-int main() {
-    cin >> n;
-    rec(0);
-    return 0;
-}
-
-// TC : O(n! * n), SC : O(n)
-
- * THE N-QUEENS CHESS TOURNAMENT: ANALOGY & DRY RUN
- * * In this problem, 'level' represents the ROW number.
- * * In each ROW, we have 4 chairs (columns 0, 1, 2, 3).
- * * We want to seat 4 Queens so none of them can "see" each other.
-
-
-
-1. THE ANALOGY: "THE PROTECTIVE SISTERS"
-   - There are 4 Sisters (Queens). 
-   - Sister 0 must sit in Row 0, Sister 1 in Row 1, and so on.
-   - They are very angry; if any sister sees another in the same 
-     column or on a diagonal, the "canPlace" check fails.
-   
-2. THE "PAUSE & RESUME" (The Movies):
-   - Movie 0 (Row 0) picks a seat, then PAUSES to let Movie 1 (Row 1) try.
-   - If Movie 1 finds no seat, it "Ends," and Movie 0 "Resumes" 
-     to move its queen to the next chair.
-
-DRY RUN: Input n = 4 (Let's follow the first successful path)
-
- * MOVIE 0: rec(0) -- Standing at Row 0
- * Tray (queens): [ ]
- * |
- * |--- CHOICE 1: col = 0
- * |    - check(Row 0, Col 0): Safe!
- * |    - Pick: [ 0 ]
- * |    - CALL rec(1) -----------------------------------------------------------┐
- * |                                                                             |
- * |    MOVIE 1: rec(1) -- Standing at Row 1                                     |
- * |    Tray: [ 0 ]                                                              |
- * |    |                                                                        |
- * |    |--- CHOICE 1: col = 0 -> FAIL (Same column as Row 0)                    |
- * |    |--- CHOICE 2: col = 1 -> FAIL (Diagonal to Row 0)                       |
- * |    |--- CHOICE 3: col = 2                                                   |
- * |    |    - check(Row 1, Col 2): Safe!                                        |
- * |    |    - Pick: [ 0, 2 ]                                                    |
- * |    |    - CALL rec(2) --------------------------------------------------┐   |
- * |    |                                                                    |   |
- * |    |    MOVIE 2: rec(2) -- Standing at Row 2                            |   |
- * |    |    Tray: [ 0, 2 ]                                                  |   |
- * |    |    |                                                               |   |
- * |    |    |--- CHOICE 1: col = 0 -> FAIL (Col check)                      |   |
- * |    |    |--- CHOICE 2: col = 1 -> FAIL (Diagonal to Row 1, Col 2)       |   |
- * |    |    |--- CHOICE 3: col = 2 -> FAIL (Col check)                      |   |
- * |    |    |--- CHOICE 4: col = 3 -> FAIL (Diagonal to Row 1, Col 2)       |   |
- * |    |    |                                                               |   |
- * |    |    |--- RESULT: All columns failed for Row 2!                      |   |
- * |    |    |--- MOVIE 2 ENDS (Dead End). Return to Movie 1. ---------------┘   |
- * |    |                                                                        |
- * |    |--- BACKTRACK (i=2): Put Queen 1 back. Tray: [ 0 ]                      |
- * |    |--- CHOICE 4: col = 3                                                   |
- * |    |    - check(Row 1, Col 3): Safe!                                        |
- * |    |    - Pick: [ 0, 3 ]                                                    |
- * |    |    - CALL rec(2) --------------------------------------------------┐   |
- * |    |                                                                    |   |
- * |    |    MOVIE 2 (v2): rec(2) -- Standing at Row 2                       |   |
- * |    |    Tray: [ 0, 3 ]                                                  |   |
- * |    |    |                                                               |   |
- * |    |    |--- CHOICE 1: col = 0 -> FAIL (Col check)                      |   |
- * |    |    |--- CHOICE 2: col = 1                                          |   |
- * |    |    |    - check(Row 2, Col 1): Safe!                               |   |
- * |    |    |    - Pick: [ 0, 3, 1 ]                                        |   |
- * |    |    |    - CALL rec(3) -----------------------------------------┐   |   |
- * |    |    |                                                           |   |   |
- * |    |    |    MOVIE 3: rec(3) -- Standing at Row 3                   |   |   |
- * |    |    |    Tray: [ 0, 3, 1 ]                                      |   |   |
- * |    |    |    |                                                      |   |   |
- * |    |    |    |--- CHOICE 1: col = 0 -> FAIL (Col check)             |   |   |
- * |    |    |    |--- CHOICE 2: col = 1 -> FAIL (Col check)             |   |   |
- * |    |    |    |--- CHOICE 3: col = 2 -> FAIL (Diagonal to Row 2,Col 1) |   |   |
- * |    |    |    |--- CHOICE 4: col = 3 -> FAIL (Col check)             |   |   |
- * |    |    |    |--- MOVIE 3 ENDS (Dead End). Return to Movie 2. ------┘   |   |
- * |    |    |                                                               |   |
- * |    |    |--- BACKTRACK (i=1): Put Queen 2 back. Tray: [ 0, 3 ]          |   |
- * |    |    |--- CHOICE 3: col = 2 -> FAIL (Diagonal to Row 1, Col 3)       |   |
- * |    |    |--- CHOICE 4: col = 3 -> FAIL (Col check)                      |   |
- * |    |    |--- MOVIE 2 ENDS. Return to Movie 1. --------------------------┘   |
- * |    |                                                                        |
- * |    |--- BACKTRACK (i=3): Put Queen 1 back. Tray: [ 0 ]                      |
- * |    |--- MOVIE 1 ENDS. Return to Movie 0. -----------------------------------┘
- * |
- * |--- BACKTRACK (i=0): Put Queen 0 back. Tray: [ ]
- * |
- * |--- CHOICE 2: i = 1 (Movie 0 moves Queen 0 to Column 1)
- * |    - Pick: [ 1 ]
- * |    - CALL rec(1) ... This eventually leads to the solution [ 1, 3, 0, 2 ]
- */
-
-3. WHY THE TIME COMPLEXITY O(n! * n)?
-   - In Row 0, we have N choices.
-   - In Row 1, we have roughly N-1 choices (cannot be in the same column).
-   - In Row 2, we have roughly N-2 choices.
-   - This creates a N * (N-1) * (N-2)... pattern, which is N!.
-   - The extra '* n' comes from the 'canPlace' loop checking all previous rows.
-
-4. WHY THE SPACE COMPLEXITY O(n)?
-   - We only ever store 'n' queens in the vector.
-   - The recursion stack only ever goes 'n' levels deep (one for each row).
-*/
-
-int main() {
-    /* * In N-Queens, we "Prune" the tree. 
-     * Notice how we didn't visit every single possible column? 
-     * 'canPlace' acts like a gatekeeper that stops us from 
-     * wasting time on paths that are obviously wrong.
-     * * Would you like me to explain the "Diagonal Math Trick" 
-     * (|r1-r2| == |c1-c2|) in more detail using a grid?
-     */
-    return 0;
-}
-
-// 2. Generate all the subsets of the array (Inputs are distinct).
-// Based on the notes that I had taken from my mentors' session, can you kindly teach me this problem using the same framework, same coding style and detailed comments.
-
-#include <iostream>
-#include <vector>
-
-using namespace std;
-
-int n;
-vector<int> arr;
-vector<int> subset;
-
-// PHASE 1: THE CHECK (Constraint)
-// In basic Subsets, every choice is valid as long as we move forward.
-// If the problem was "Subsets of size K" or "Sum equals S", 
-// this function would contain that logic.
-bool canPlace(int index) {
-    return true; 
-}
-
-void rec(int start_index) { // 'level' here is the starting point for choices
-    
-    // --- PHASE 2: THE BASE CASE (Decide) ---
-    // In this template, every node in the recursion tree is a valid subset.
-    // So we print/save the subset immediately.
-    cout << "[ ";
-    for(int val : subset) cout << val << " ";
-    cout << "]" << endl;
-
-    // --- PHASE 3: THE EXPLORATION (The For-Loop) ---
-    // We try every possible next element from the current 'start_index' to n-1.
-    for(int i = start_index; i < n; i++) {
-        
-        if(canPlace(i)) {
-            // 1. PLACE
-            subset.push_back(arr[i]);
-
-            // 2. RECURSE
-            // Move to i + 1 so we don't pick the same element again.
-            rec(i + 1);
-
-            // 3. RESUME & REVERT (Backtrack)
-            subset.pop_back();
-        }
-    }
-}
-
-int main() {
-    arr = {1, 2, 3};
-    n = arr.size();
-    
-    // Start from index 0
-    rec(0);
-    
-    return 0;
-}
-
-// If I asked you to "Find all subsets of size 2", you would only need to change one line in the N-Queens template:
-
-// if(subset.size() == 2) { 
-//     // print and return 
-// }
-
-
-
-THE RECTIFIED FRUIT BUFFET: PERFECT INDENTATION DRY RUN
-I understand completely. Indentation is the "GPS" of recursion. 
-Without it, you lose track of which "Movie" you are currently watching.
-In this trace, every level of recursion is pushed further to the right.
-
-
-#include <iostream>
-#include <vector>
-#include <string>
-
-STATIONS: 0:Apples, 1:Bananas, 2:Oranges
-n = 3
-
-
- * MOVIE 0: rec(0) 
+ * DETAILED EXECUTION TREE (Pick/Don't Pick)
+ * * MOVIE 0: rec(0) -> Focus: 1 (Apples)
  * Tray: [ ]
  * |
- * |--- ACTION: Print "[ ]"
- * |
- * |--- CHOICE 1: i = 0 (Apples)
- * |    - Action: Pick Apples. Tray: [ Apples ]
- * |    - Status: Pause Movie 0 at i=0.
- * |    - CALL rec(1) -----------------------------------------------------------┐
+ * |--- CHOICE 1: PICK 1 (Apples)
+ * |    - Action: Tray: [ 1 ]
+ * |    - Status: Pause Movie 0. CALL rec(1) ------------------------------------┐
  * |                                                                             |
- * |    MOVIE 1: rec(1)                                                          |
- * |    Tray: [ Apples ]                                                         |
+ * |    MOVIE 1: rec(1) -> Focus: 2 (Bananas)                                    |
+ * |    Tray: [ 1 ]                                                              |
  * |    |                                                                        |
- * |    |--- ACTION: Print "[ Apples ]"                                          |
+ * |    |--- CHOICE 1: PICK 2 (Bananas)                                          |
+ * |    |    - Action: Tray: [ 1, 2 ]                                            |
+ * |    |    - Status: Pause Movie 1. CALL rec(2) -----------------------------┐ |
+ * |    |                                                                     | |
+ * |    |    MOVIE 2: rec(2) -> Focus: 3 (Oranges)                            | |
+ * |    |    Tray: [ 1, 2 ]                                                   | |
+ * |    |    |                                                                | |
+ * |    |    |--- CHOICE 1: PICK 3 (Oranges)                                  | |
+ * |    |    |    - Action: Tray: [ 1, 2, 3 ]                                 | |
+ * |    |    |    - CALL rec(3) --------------------------------------------┐ | |
+ * |    |    |      MOVIE 3: rec(3) (Base Case)                             | | |
+ * |    |    |      - ACTION: Print "{ 1 2 3 }"                             | | |
+ * |    |    |      - RETURN to Movie 2. -----------------------------------┘ | |
+ * |    |    |                                                                | |
+ * |    |    |--- BACKTRACK: Pop 3. Tray: [ 1, 2 ]                            | |
+ * |    |    |                                                                | |
+ * |    |    |--- CHOICE 2: DON'T PICK 3 (Oranges)                            | |
+ * |    |    |    - CALL rec(3) --------------------------------------------┐ | |
+ * |    |    |      MOVIE 4: rec(3) (Base Case)                             | | |
+ * |    |    |      - ACTION: Print "{ 1 2 }"                               | | |
+ * |    |    |      - RETURN to Movie 2. -----------------------------------┘ | |
+ * |    |    |                                                                | |
+ * |    |    |--- MOVIE 2 ENDS. Return to Movie 1. ---------------------------┘ |
  * |    |                                                                        |
- * |    |--- CHOICE 1: i = 1 (Bananas)                                           |
- * |    |    - Action: Pick Bananas. Tray: [ Apples, Bananas ]                   |
- * |    |    - Status: Pause Movie 1 at i=1.                                     |
- * |    |    - CALL rec(2) --------------------------------------------------┐   |
- * |    |                                                                    |   |
- * |    |    MOVIE 2: rec(2)                                                 |   |
- * |    |    Tray: [ Apples, Bananas ]                                       |   |
- * |    |    |                                                               |   |
- * |    |    |--- ACTION: Print "[ Apples, Bananas ]"                        |   |
- * |    |    |                                                               |   |
- * |    |    |--- CHOICE 1: i = 2 (Oranges)                                  |   |
- * |    |    |    - Action: Pick Oranges. Tray: [ Apples, Bananas, Oranges ] |   |
- * |    |    |    - Status: Pause Movie 2 at i=2.                            |   |
- * |    |    |    - CALL rec(3) -----------------------------------------┐   |   |
- * |    |    |                                                           |   |   |
- * |    |    |    MOVIE 3: rec(3)                                        |   |   |
- * |    |    |    Tray: [ Apples, Bananas, Oranges ]                     |   |   |
- * |    |    |    |                                                      |   |   |
- * |    |    |    |--- ACTION: Print "[ Apples, Bananas, Oranges ]"      |   |   |
- * |    |    |    |--- LOOP: i=3; (3 < 3) is FALSE.                      |   |   |
- * |    |    |    |--- MOVIE 3 ENDS. Return to Movie 2. -----------------┘   |   |
- * |    |    |                                                               |   |
- * |    |    |--- BACKTRACK (i=2): Put Oranges back. Tray: [ Apples, Bananas ]|   |
- * |    |    |--- LOOP: i++ becomes 3; (3 < 3) is FALSE.                     |   |
- * |    |    |--- MOVIE 2 ENDS. Return to Movie 1. --------------------------┘   |
+ * |    |--- BACKTRACK: Pop 2. Tray: [ 1 ]                                       |
  * |    |                                                                        |
- * |    |--- BACKTRACK (i=1): Put Bananas back. Tray: [ Apples ]                 |
+ * |    |--- CHOICE 2: DON'T PICK 2 (Bananas)                                    |
+ * |    |    - Status: Pause Movie 1. CALL rec(2) -----------------------------┐ |
+ * |    |                                                                     | |
+ * |    |    MOVIE 5: rec(2) -> Focus: 3 (Oranges)                            | |
+ * |    |    Tray: [ 1 ]                                                      | |
+ * |    |    |--- CHOICE 1: PICK 3 -> rec(3) -> Print "{ 1 3 }"               | |
+ * |    |    |--- BACKTRACK: Pop 3. Tray: [ 1 ]                               | |
+ * |    |    |--- CHOICE 2: DON'T PICK 3 -> rec(3) -> Print "{ 1 }"           | |
+ * |    |    |--- MOVIE 5 ENDS. Return to Movie 1. ---------------------------┘ |
  * |    |                                                                        |
- * |    |--- CHOICE 2: i = 2 (Oranges)                                           |
- * |    |    - Action: Pick Oranges. Tray: [ Apples, Oranges ]                   |
- * |    |    - Status: Pause Movie 1 at i=2.                                     |
- * |    |    - CALL rec(3) --------------------------------------------------┐   |
- * |    |                                                                    |   |
- * |    |    MOVIE 4: rec(3)                                                 |   |
- * |    |    Tray: [ Apples, Oranges ]                                       |   |
- * |    |    |                                                               |   |
- * |    |    |--- ACTION: Print "[ Apples, Oranges ]"                        |   |
- * |    |    |--- LOOP: i=3; FALSE.                                          |   |
- * |    |    |--- MOVIE 4 ENDS. Return to Movie 1. --------------------------┘   |
- * |    |                                                                        |
- * |    |--- BACKTRACK (i=2): Put Oranges back. Tray: [ Apples ]                 |
- * |    |--- LOOP: i++ becomes 3; FALSE.                                         |
  * |    |--- MOVIE 1 ENDS. Return to Movie 0. -----------------------------------┘
  * |
- * |--- BACKTRACK (i=0): Put Apples back. Tray: [ ]
+ * |--- BACKTRACK: Pop 1. Tray: [ ]
  * |
- * |--- CHOICE 2: i = 1 (Bananas)
- * |    - Action: Pick Bananas. Tray: [ Bananas ]
- * |    - Status: Pause Movie 0 at i=1.
- * |    - CALL rec(2) -----------------------------------------------------------┐
+ * |--- CHOICE 2: DON'T PICK 1 (Apples)
+ * |    - Status: Pause Movie 0. CALL rec(1) ------------------------------------┐
  * |                                                                             |
- * |    MOVIE 5: rec(2)                                                          |
- * |    Tray: [ Bananas ]                                                        |
+ * |    MOVIE 6: rec(1) -> Focus: 2 (Bananas)                                    |
+ * |    Tray: [ ]                                                                |
+ * |    |--- CHOICE 1: PICK 2 (Bananas)                                          |
+ * |    |    - Action: Tray: [ 2 ]                                               |
+ * |    |    - CALL rec(2) ----------------------------------------------------┐ |
+ * |    |      MOVIE 7: rec(2) -> Focus: 3 (Oranges)                           | |
+ * |    |      |-- PICK 3 -> rec(3) -> Print "{ 2 3 }"                         | |
+ * |    |      |-- BACKTRACK: Pop 3. Tray: [ 2 ]                               | |
+ * |    |      |-- DON'T PICK 3 -> rec(3) -> Print "{ 2 }"                     | |
+ * |    |      |-- MOVIE 7 ENDS. ----------------------------------------------┘ |
  * |    |                                                                        |
- * |    |--- ACTION: Print "[ Bananas ]"                                         |
+ * |    |--- BACKTRACK: Pop 2. Tray: [ ]                                         |
  * |    |                                                                        |
- * |    |--- CHOICE 1: i = 2 (Oranges)                                           |
- * |    |    - Action: Pick Oranges. Tray: [ Bananas, Oranges ]                  |
- * |    |    - Status: Pause Movie 5 at i=2.                                     |
- * |    |    - CALL rec(3) --------------------------------------------------┐   |
- * |    |                                                                    |   |
- * |    |    MOVIE 6: rec(3)                                                 |   |
- * |    |    Tray: [ Bananas, Oranges ]                                      |   |
- * |    |    |--- ACTION: Print "[ Bananas, Oranges ]"                       |   |
- * |    |    |--- MOVIE 6 ENDS. Return to Movie 5. --------------------------┘   |
- * |    |                                                                        |
- * |    |--- BACKTRACK (i=2): Put Oranges back. Tray: [ Bananas ]                |
- * |    |--- MOVIE 5 ENDS. Return to Movie 0. -----------------------------------┘
+ * |    |--- CHOICE 2: DON'T PICK 2 (Bananas)                                    |
+ * |    |    - CALL rec(2) ----------------------------------------------------┐ |
+ * |    |      MOVIE 8: rec(2) -> Focus: 3 (Oranges)                           | |
+ * |    |      |-- PICK 3 -> rec(3) -> Print "{ 3 }"                           | |
+ * |    |      |-- BACKTRACK: Pop 3. Tray: [ ]                                 | |
+ * |    |      |-- DON'T PICK 3 -> rec(3) -> Print "{ }"                       | |
+ * |    |      |-- MOVIE 8 ENDS. ----------------------------------------------┘ |
+ * |    |--- MOVIE 6 ENDS. Return to Movie 0. -----------------------------------┘
  * |
- * |--- BACKTRACK (i=1): Put Bananas back. Tray: [ ]
- * |
- * |--- CHOICE 3: i = 2 (Oranges)
- * |    - Action: Pick Oranges. Tray: [ Oranges ]
- * |    - CALL rec(3) -----------------------------------------------------------┐
- * |                                                                             |
- * |    MOVIE 7: rec(3)                                                          |
- * |    |--- ACTION: Print "[ Oranges ]"                                         |
- * |    |--- MOVIE 7 ENDS. Return to Movie 0. -----------------------------------┘
- * |
- * |--- BACKTRACK (i=2): Put Oranges back. Tray: [ ]
- * |--- LOOP: i++ becomes 3; FALSE.
  * |--- MOVIE 0 ENDS. (FINISH)
- */
 
-int main() {
-    /*
-     * Look how the indentation "collapses" back to the left 
-     * every time a movie ends. This is the visual representation 
-     * of Backtracking.
-     * * Does the visual "staircase" of indentation make it 
-     * clearer how the computer "steps back" in its memory?
-     */
-    return 0;
+// Strictly stick to this framework to construct the code : 
+// Look at the tree-diagram, notice what we do at any one level.
+// We have two choices, either pick up or skip
+// If picked up, move to the next level
+// Else skip it and move to the next level.
+
+// Dont forget to clean up (pop_back) before going for the next choice.
+
+void generateSubsets(int index, vector<int>& nums, vector<int>& tray, vector<vector<int>>& result) {
+    // --- THE BASE CASE ---
+    // Condition: Have we finished making choices for all elements?
+    if (index == nums.size()) {
+        result.push_back(tray); // Action: Take a snapshot of the current tray
+        return;                 // Action: Exit this 'Movie'
+    }
+
+    // --- THE RECURSIVE CHOICES ---
+
+    // CHOICE 1: PICK the element
+    tray.push_back(nums[index]);          // Action: Put item in Tray
+    generateSubsets(index + 1, nums, tray, result); // Call next Movie
+
+    // BACKTRACK: Clean up before the next choice
+    tray.pop_back();                      // Action: Remove item from Tray
+
+    // CHOICE 2: DON'T PICK the element
+    generateSubsets(index + 1, nums, tray, result); // Call next Movie
 }
 
-
-ORDER OF PRINTING:
-   1.  [ ]                          (The starting point - Movie 0)
-   2.  [ Apples ]                   (Pick the first available fruit)
-   3.  [ Apples, Bananas ]          (Pick the next available)
-   4.  [ Apples, Bananas, Oranges ] (Deepest possible path reached)
-   --- Backtrack starts ---
-   5.  [ Apples, Oranges ]          (Back to Apples, skip Bananas, pick Oranges)
-   --- Backtrack to Start ---
-   6.  [ Bananas ]                  (Start fresh from second fruit)
-   7.  [ Bananas, Oranges ]         (Pick next available after Bananas)
-   --- Backtrack to Start ---
-   8.  [ Oranges ]                  (Start fresh from third fruit)
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+// Time and Space Complexities Estimation 
+// TC : O(2 ^ n * n)
+// SC : O(n)
