@@ -114,83 +114,62 @@ bool isPalindrome(string s, int i, int j) {
 
 1. Generate all the subsets of the array (Inputs are distinct).
 
- * DETAILED EXECUTION TREE (Pick/Don't Pick)
- * * MOVIE 0: rec(0) -> Focus: 1 (Apples)
- * Tray: [ ]
+* DETAILED EXECUTION TREE (Pick / Don't Pick)
+ * Input: [1, 2, 3] (Apples, Bananas, Oranges)
+ * * Root: rec(0) -> Focus: 1
+ * Path: []
  * |
- * |--- CHOICE 1: PICK 1 (Apples)
- * |    - Action: Tray: [ 1 ]
- * |    - Status: Pause Movie 0. CALL rec(1) ------------------------------------┐
- * |                                                                             |
- * |    MOVIE 1: rec(1) -> Focus: 2 (Bananas)                                    |
- * |    Tray: [ 1 ]                                                              |
- * |    |                                                                        |
- * |    |--- CHOICE 1: PICK 2 (Bananas)                                          |
- * |    |    - Action: Tray: [ 1, 2 ]                                            |
- * |    |    - Status: Pause Movie 1. CALL rec(2) -----------------------------┐ |
- * |    |                                                                     | |
- * |    |    MOVIE 2: rec(2) -> Focus: 3 (Oranges)                            | |
- * |    |    Tray: [ 1, 2 ]                                                   | |
- * |    |    |                                                                | |
- * |    |    |--- CHOICE 1: PICK 3 (Oranges)                                  | |
- * |    |    |    - Action: Tray: [ 1, 2, 3 ]                                 | |
- * |    |    |    - CALL rec(3) --------------------------------------------┐ | |
- * |    |    |      MOVIE 3: rec(3) (Base Case)                             | | |
- * |    |    |      - ACTION: Print "{ 1 2 3 }"                             | | |
- * |    |    |      - RETURN to Movie 2. -----------------------------------┘ | |
- * |    |    |                                                                | |
- * |    |    |--- BACKTRACK: Pop 3. Tray: [ 1, 2 ]                            | |
- * |    |    |                                                                | |
- * |    |    |--- CHOICE 2: DON'T PICK 3 (Oranges)                            | |
- * |    |    |    - CALL rec(3) --------------------------------------------┐ | |
- * |    |    |      MOVIE 4: rec(3) (Base Case)                             | | |
- * |    |    |      - ACTION: Print "{ 1 2 }"                               | | |
- * |    |    |      - RETURN to Movie 2. -----------------------------------┘ | |
- * |    |    |                                                                | |
- * |    |    |--- MOVIE 2 ENDS. Return to Movie 1. ---------------------------┘ |
- * |    |                                                                        |
- * |    |--- BACKTRACK: Pop 2. Tray: [ 1 ]                                       |
- * |    |                                                                        |
- * |    |--- CHOICE 2: DON'T PICK 2 (Bananas)                                    |
- * |    |    - Status: Pause Movie 1. CALL rec(2) -----------------------------┐ |
- * |    |                                                                     | |
- * |    |    MOVIE 5: rec(2) -> Focus: 3 (Oranges)                            | |
- * |    |    Tray: [ 1 ]                                                      | |
- * |    |    |--- CHOICE 1: PICK 3 -> rec(3) -> Print "{ 1 3 }"               | |
- * |    |    |--- BACKTRACK: Pop 3. Tray: [ 1 ]                               | |
- * |    |    |--- CHOICE 2: DON'T PICK 3 -> rec(3) -> Print "{ 1 }"           | |
- * |    |    |--- MOVIE 5 ENDS. Return to Movie 1. ---------------------------┘ |
- * |    |                                                                        |
- * |    |--- MOVIE 1 ENDS. Return to Movie 0. -----------------------------------┘
+ * |--- CHOICE 1: PICK 1
+ * |    - Path: [ 1 ]
+ * |    - CALL rec(1) ------------------------------------------------------┐
+ * |      rec(1) -> Focus: 2                                                |
+ * |      |                                                                 |
+ * |      |--- CHOICE 1: PICK 2                                             |
+ * |      |    - Path: [ 1, 2 ]                                             |
+ * |      |    - CALL rec(2) ---------------------------------------------┐ |
+ * |      |      rec(2) -> Focus: 3                                       | |
+ * |      |      |                                                        | |
+ * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 1 2 3 } | |
+ * |      |      |--- BACKTRACK: Pop 3. Path: [ 1, 2 ]                    | |
+ * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 1 2 }   | |
+ * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
+ * |      |                                                                 |
+ * |      |--- BACKTRACK: Pop 2. Path: [ 1 ]                                |
+ * |      |                                                                 |
+ * |      |--- CHOICE 2: SKIP 2                                             |
+ * |      |    - CALL rec(2) ---------------------------------------------┐ |
+ * |      |      rec(2) -> Focus: 3                                       | |
+ * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 1 3 }   | |
+ * |      |      |--- BACKTRACK: Pop 3. Path: [ 1 ]                       | |
+ * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 1 }     | |
+ * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
+ * |      └--- RETURN to rec(0) --------------------------------------------┘
  * |
- * |--- BACKTRACK: Pop 1. Tray: [ ]
+ * |--- BACKTRACK: Pop 1. Path: []
  * |
- * |--- CHOICE 2: DON'T PICK 1 (Apples)
- * |    - Status: Pause Movie 0. CALL rec(1) ------------------------------------┐
- * |                                                                             |
- * |    MOVIE 6: rec(1) -> Focus: 2 (Bananas)                                    |
- * |    Tray: [ ]                                                                |
- * |    |--- CHOICE 1: PICK 2 (Bananas)                                          |
- * |    |    - Action: Tray: [ 2 ]                                               |
- * |    |    - CALL rec(2) ----------------------------------------------------┐ |
- * |    |      MOVIE 7: rec(2) -> Focus: 3 (Oranges)                           | |
- * |    |      |-- PICK 3 -> rec(3) -> Print "{ 2 3 }"                         | |
- * |    |      |-- BACKTRACK: Pop 3. Tray: [ 2 ]                               | |
- * |    |      |-- DON'T PICK 3 -> rec(3) -> Print "{ 2 }"                     | |
- * |    |      |-- MOVIE 7 ENDS. ----------------------------------------------┘ |
- * |    |                                                                        |
- * |    |--- BACKTRACK: Pop 2. Tray: [ ]                                         |
- * |    |                                                                        |
- * |    |--- CHOICE 2: DON'T PICK 2 (Bananas)                                    |
- * |    |    - CALL rec(2) ----------------------------------------------------┐ |
- * |    |      MOVIE 8: rec(2) -> Focus: 3 (Oranges)                           | |
- * |    |      |-- PICK 3 -> rec(3) -> Print "{ 3 }"                           | |
- * |    |      |-- BACKTRACK: Pop 3. Tray: [ ]                                 | |
- * |    |      |-- DON'T PICK 3 -> rec(3) -> Print "{ }"                       | |
- * |    |      |-- MOVIE 8 ENDS. ----------------------------------------------┘ |
- * |    |--- MOVIE 6 ENDS. Return to Movie 0. -----------------------------------┘
- * |
- * |--- MOVIE 0 ENDS. (FINISH)
+ * |--- CHOICE 2: SKIP 1
+ * |    - CALL rec(1) ------------------------------------------------------┐
+ * |      rec(1) -> Focus: 2                                                |
+ * |      |--- CHOICE 1: PICK 2                                             |
+ * |      |    - Path: [ 2 ]                                                |
+ * |      |    - CALL rec(2) ---------------------------------------------┐ |
+ * |      |      rec(2) -> Focus: 3                                       | |
+ * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 2 3 }   | |
+ * |      |      |--- BACKTRACK: Pop 3. Path: [ 2 ]                       | |
+ * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 2 }     | |
+ * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
+ * |      |                                                                 |
+ * |      |--- BACKTRACK: Pop 2. Path: []                                   |
+ * |      |                                                                 |
+ * |      |--- CHOICE 2: SKIP 2                                             |
+ * |      |    - CALL rec(2) ---------------------------------------------┐ |
+ * |      |      rec(2) -> Focus: 3                                       | |
+ * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 3 }     | |
+ * |      |      |--- BACKTRACK: Pop 3. Path: []                          | |
+ * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { }       | |
+ * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
+ * |      └--- RETURN to rec(0) --------------------------------------------┘
+ * └--- FINISH
 
 // Strictly stick to this framework to construct the code : 
 // Look at the tree-diagram, notice what we do at any one level.
