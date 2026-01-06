@@ -59,6 +59,28 @@ int factorial(int n) {
 }    
 // Total Functions calls : n; TC : O(n)
 // Space Complexity ; O(n)
+main() 
+  │
+  └──▶ factorial(5) 
+        │   (waits for 4)
+        └──▶ factorial(4) 
+              │   (waits for 3)
+              └──▶ factorial(3) 
+                    │   (waits for 2)
+                    └──▶ factorial(2) 
+                          │   (waits for 1)
+                          └──▶ factorial(1) ──┐
+                                              │ RETURN 1
+                          ┌───────────────────┘
+                    2 * 1 = 2
+                    ┌─────┘
+              3 * 2 = 6
+              ┌─────┘
+        4 * 6 = 24
+        ┌─────┘
+  5 * 24 = 120
+  ┌─────┘
+Result: 120
 
 2. Fibonacci Problem
 int fibonacci(int n) {
@@ -72,6 +94,14 @@ int fibonacci(int n) {
 // Total Functions calls : 2^n; TC : O(2^n) // Consider all the circles of a tree
 // Space Complexity : O(n) // Maximum Height of a tree.
 // For visualisation : Either make use of call stack or tree like visualisation
+                fib(4)
+              /      \
+          fib(3)      fib(2)
+          /    \       /    \
+      fib(2)  fib(1) fib(1)  fib(0)
+      /    \    (1)    (1)    (0)
+  fib(1)  fib(0)
+   (1)     (0)
 
 Why stack is the appropriate data structure.
 Because the control flow is from top to bottom and return flow is from bottom to top, we make use of LIFO data structure, stack.
@@ -113,67 +143,45 @@ bool isPalindrome(string s, int i, int j) {
 
 // TC : O(n/2) function calls : O(n)
 // SC : O(n/2) : O(n)
+            isPalindrome("RACECAR", 0, 6)
+                       |
+            'R' == 'R' is True, call:
+                       |
+            isPalindrome("RACECAR", 1, 5)
+                       |
+            'A' == 'A' is True, call:
+                       |
+            isPalindrome("RACECAR", 2, 4)
+                       |
+            'C' == 'C' is True, call:
+                       |
+            isPalindrome("RACECAR", 3, 3)
+                       |
+                [ i >= j is True ]
+                [ BASE CASE: return true ]
 
 // (Backtracking Based Recursion Problems)
 
 1. Generate all the subsets of the array (Inputs are distinct).
 // Step 1 : Take pen and paper, draw the recursion tree.    
-* DETAILED EXECUTION TREE (Pick / Don't Pick)
- * Input: [1, 2, 3] (Apples, Bananas, Oranges)
- * * Root: rec(0) -> Focus: 1
- * Path: []
- * |
- * |--- CHOICE 1: PICK 1
- * |    - Path: [ 1 ]
- * |    - CALL rec(1) ------------------------------------------------------┐
- * |      rec(1) -> Focus: 2                                                |
- * |      |                                                                 |
- * |      |--- CHOICE 1: PICK 2                                             |
- * |      |    - Path: [ 1, 2 ]                                             |
- * |      |    - CALL rec(2) ---------------------------------------------┐ |
- * |      |      rec(2) -> Focus: 3                                       | |
- * |      |      |                                                        | |
- * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 1 2 3 } | |
- * |      |      |--- BACKTRACK: Pop 3. Path: [ 1, 2 ]                    | |
- * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 1 2 }   | |
- * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
- * |      |                                                                 |
- * |      |--- BACKTRACK: Pop 2. Path: [ 1 ]                                |
- * |      |                                                                 |
- * |      |--- CHOICE 2: SKIP 2                                             |
- * |      |    - CALL rec(2) ---------------------------------------------┐ |
- * |      |      rec(2) -> Focus: 3                                       | |
- * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 1 3 }   | |
- * |      |      |--- BACKTRACK: Pop 3. Path: [ 1 ]                       | |
- * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 1 }     | |
- * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
- * |      └--- RETURN to rec(0) --------------------------------------------┘
- * |
- * |--- BACKTRACK: Pop 1. Path: []
- * |
- * |--- CHOICE 2: SKIP 1
- * |    - CALL rec(1) ------------------------------------------------------┐
- * |      rec(1) -> Focus: 2                                                |
- * |      |--- CHOICE 1: PICK 2                                             |
- * |      |    - Path: [ 2 ]                                                |
- * |      |    - CALL rec(2) ---------------------------------------------┐ |
- * |      |      rec(2) -> Focus: 3                                       | |
- * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 2 3 }   | |
- * |      |      |--- BACKTRACK: Pop 3. Path: [ 2 ]                       | |
- * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { 2 }     | |
- * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
- * |      |                                                                 |
- * |      |--- BACKTRACK: Pop 2. Path: []                                   |
- * |      |                                                                 |
- * |      |--- CHOICE 2: SKIP 2                                             |
- * |      |    - CALL rec(2) ---------------------------------------------┐ |
- * |      |      rec(2) -> Focus: 3                                       | |
- * |      |      |--- CHOICE 1: PICK 3 -> rec(3) (Base) -> Print { 3 }     | |
- * |      |      |--- BACKTRACK: Pop 3. Path: []                          | |
- * |      |      |--- CHOICE 2: SKIP 3 -> rec(3) (Base) -> Print { }       | |
- * |      |      └--- RETURN to rec(1) -----------------------------------┘ |
- * |      └--- RETURN to rec(0) --------------------------------------------┘
- * └--- FINISH
+ROOT: index 0
+                                              (Input: [1, 2, 3])
+                                              tray: { }
+                      ____________________________/    \____________________________
+                     /                                                              \
+             [ 1. PUSH 1 ]                                                   [ 4. DON'T PICK 1 ]
+             [ CALL index 1 ]                                                [ CALL index 1 ]
+             tray: {1}                                                       tray: { }
+          ______/    \______                                              ______/    \______
+         /                  \                                            /                  \
+ [ 2. PUSH 2 ]        [ 3. DON'T PICK 2 ]                        [ 5. PUSH 2 ]        [ 6. DON'T PICK 2 ]
+ [ CALL index 2 ]     [ CALL index 2 ]                           [ CALL index 2 ]     [ CALL index 2 ]
+ tray: {1, 2}         tray: {1}                                  tray: {2}            tray: { }
+    /    \               /    \                                     /    \               /    \
+ [P 3]  [NO 3]       [P 3]  [NO 3]                               [P 3]  [NO 3]       [P 3]  [NO 3]
+  |      |            |      |                                    |      |            |      |
+{1,2,3} {1,2}        {1,3}   {1}                                 {2,3}   {2}          {3}     { }
+(BASE)  (BASE)       (BASE)  (BASE)                              (BASE)  (BASE)       (BASE)  (BASE)
     
 // Step 2 :
 // Strictly stick to this framework to construct the code : 
