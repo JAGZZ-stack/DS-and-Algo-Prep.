@@ -1,4 +1,4 @@
-// 1. Two Sum -  https://leetcode.com/problems/two-sum/
+// Two Sum -  https://leetcode.com/problems/two-sum/
 
 // Bruteforce Approach - Nested Loops Based 
 class Solution {
