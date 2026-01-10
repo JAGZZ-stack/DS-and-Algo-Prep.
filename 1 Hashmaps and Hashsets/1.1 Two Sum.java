@@ -1,3 +1,10 @@
+// Important map/set inbuilt functions :
+
+// map.put(key, value);
+// map.containsKey(element);
+// map.get(element);
+
+
 // Two Sum -  https://leetcode.com/problems/two-sum/
 
 // Bruteforce Approach - Nested Loops Based 
