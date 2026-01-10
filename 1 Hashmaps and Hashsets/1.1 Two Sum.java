@@ -4,7 +4,10 @@
 // map.containsKey(element);
 // map.get(element);
 
+// set.add(element)
+// if(set.contains(element))
 
+// ------------------------------------------------------------------------------------------------
 // Two Sum -  https://leetcode.com/problems/two-sum/
 
 // Bruteforce Approach - Nested Loops Based 
