@@ -3,6 +3,7 @@
 // map.put(key, value);
 // map.containsKey(element);
 // map.get(element);
+// map.put(c, map.getOrDefault(c, 0) + 1);
 
 // set.add(element)
 // if(set.contains(element))
