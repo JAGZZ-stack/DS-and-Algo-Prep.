@@ -32,9 +32,6 @@ class Solution {
 // TC : O(n)
 // SC : O(n)
 
-
-
-
 // pair<int, int>	Map.Entry<Integer, Integer>	- A single Key-Value pair.
-// it.first	    entry.getKey()	- Grab the number.
+// it.first	        entry.getKey()	- Grab the number.
 // it.second	    entry.getValue() - Grab the frequency.
