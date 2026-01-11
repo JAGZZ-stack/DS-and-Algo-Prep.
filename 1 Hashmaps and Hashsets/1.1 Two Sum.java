@@ -1,12 +1,26 @@
-// Important map/set inbuilt functions :
+Important map/set inbuilt functions :
 
-// map.put(key, value);
-// map.containsKey(element);
-// map.get(element);
-// map.put(c, map.getOrDefault(c, 0) + 1);
+map.put(key, value); // Build the map
+map.containsKey(element); // Check if map contains the key
+map.get(element); // Get the value for one Key in the map
 
-// set.add(element)
-// if(set.contains(element))
+// Change the value of one key in the map
+if(map.containsKey(element)) {
+    map.put(c, map.getOrDefault(c, 0) + 1); 
+}
+
+// Adding the list of values for one particular Key
+if (!map.containsKey(sortedString)) {
+        map.put(sortedString, new ArrayList<>());
+    } // Performing this only if the key is not present
+    
+    map.get(sortedString).add(strs[i]);
+
+map.get(sortedString).add(strs[i]); 
+
+// -----------------------------------------------------------------------------------------------
+set.add(element) // Add an element into the set
+if(set.contains(element)) // Check if the set contains one particular element
 
 // ------------------------------------------------------------------------------------------------
 // Two Sum -  https://leetcode.com/problems/two-sum/
