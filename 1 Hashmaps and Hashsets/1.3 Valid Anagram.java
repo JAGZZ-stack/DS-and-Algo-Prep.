@@ -1,5 +1,24 @@
 // Valid Anagram - https://leetcode.com/problems/valid-anagram/
 
+// Sort and Compare
+public class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+
+        char[] sSort = s.toCharArray();
+        char[] tSort = t.toCharArray();
+        Arrays.sort(sSort);
+        Arrays.sort(tSort);
+        return Arrays.equals(sSort, tSort);
+    }
+}
+
+// TC : O(n * log n)
+// SC : O(1)
+
+// Hashmap Based Approach
 class Solution {
     public boolean isAnagram(String s, String t) {
         // Conditions to be met :
