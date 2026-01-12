@@ -15,6 +15,7 @@ class Solution {
 
     public void nextPermutation(int[] nums) {
         int n = nums.length;
+        int index = -1;
 
         // 1. Find the rightmost pivot
         for(int i = n - 1; i >= 1; i--) {
