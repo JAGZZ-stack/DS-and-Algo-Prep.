@@ -10,7 +10,7 @@ class Solution {
                 i++; // Important setup for Slow and Fast Pointers 
             }
         }
-        return i;
+        return i; // Understand the reasoning behind such setups in fast and slow pointers
     }
 }
 
