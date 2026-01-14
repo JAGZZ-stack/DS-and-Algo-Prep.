@@ -3,8 +3,9 @@
 // Frequency Counting & Partitioning
 // Two Pass // TC : O(n), SC : O(n)
 
-// Dutch National Flag (Three Pointers Approach) :
-// We define three invariant boundaries in the array. At any point during the process, the array is divided into four mathematical zones:
+// Algorithm : 
+// The Dutch National Flag algorithm uses three pointers to partition an array into three segments (0s, 1s, and 2s) 
+// by swapping elements into their respective "low" or "high" boundaries in a single O(n) pass.
 
 // Zone 1 : [0...low - 1] -> All the elements are 0
 // Zone 2 : [low...mid - 1] -> All the elements are 1
