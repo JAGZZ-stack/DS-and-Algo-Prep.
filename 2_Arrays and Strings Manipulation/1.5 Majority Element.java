@@ -30,6 +30,8 @@ class Solution {
 
         for(int i = 0; i < nums.length; i++) {
             if(count == 0) {
+                // This check is written first, because at this stage, we have no element and this is a neutral state. 
+                // So, before making any decisions that can possibly change our count to negative, resetting is the priority.
                 element = nums[i];
                 count = 1;
             } else if(nums[i] == element) {
