@@ -1,25 +1,25 @@
 // Remove Duplicates from Sorted Array - https://leetcode.com/problems/remove-duplicates-from-sorted-array/
 
 // Brute Force Approach : 
-// class Solution {
-//     public int removeDuplicates(int[] nums) {
-//         HashSet<Integer> set = new LinkedHashSet<>(); // To preserve the orders (LinkedHashSet)
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        HashSet<Integer> set = new LinkedHashSet<>(); // To preserve the orders (LinkedHashSet)
 
-//         for(int val : nums) {
-//             if(!set.contains(val)) {
-//                 set.add(val);
-//             }
-//         }
+        for(int val : nums) {
+            if(!set.contains(val)) {
+                set.add(val);
+            }
+        }
 
-//         int i = 0;
-//         for(int val : set) {
-//             nums[i] = val;
-//             i++;
-//         }
+        int i = 0;
+        for(int val : set) {
+            nums[i] = val;
+            i++;
+        }
 
-//         return i;
-//     }
-// }
+        return i;
+    }
+}
 
 // TC : O(n)
 // SC : O(n)
