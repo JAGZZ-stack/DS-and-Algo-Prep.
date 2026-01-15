@@ -1,46 +1,51 @@
 // Next Permutation - https://leetcode.com/problems/next-permutation/
 
+// Brute Force Approach : 
+// Generate all the permuations in the order - O(n!). Store them in the list.
+// Linear Search of the input 
+// Fetch the next element 
+
+// TC : O(n!), SC : O(n)
+
+// Optimised Approach :
+// Prefix match based approach : 
+// To only deal with all the next permutations of the given number.
 class Solution {
-    private void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
-    }
-
-    private void reverse(int[] nums, int start, int end) {
-        while (start < end) {
-            swap(nums, start++, end--);
-        }
-    }
-
     public void nextPermutation(int[] nums) {
-        int n = nums.length;
-        int index = -1;
+        int breakingPoint = -1; // most important set up
 
-        // 1. Find the rightmost pivot
-        for(int i = n - 1; i >= 1; i--) {
-            if(nums[i] > nums[i - 1]) {
-                index = i - 1;
+        // Step 1 : Find the breaking point index
+        for(int i = nums.length - 2; i >= 0; i--) {
+            if(nums[i] < nums[i+1]) {
+                breakingPoint = i;
                 break;
             }
         }
 
-        // 2. If index is -1, the array is in descending order (last permutation)
-        // Just reverse the whole thing to get the first permutation.
-        if (index != -1) {
-            // Find the successor (the number to swap with index)
-            for (int i = n - 1; i > index; i--) {
-                if (nums[i] > nums[index]) {
-                    swap(nums, i, index);
-                    break;
+        // Step 2 : Swap the element at breakingPoint index with the index of the element that is next closest
+        if(breakingPoint != -1) {
+            for(int i = nums.length - 1; i >= breakingPoint + 1; i--) {
+                if(nums[breakingPoint] < nums[i]) {
+                    int temp = nums[breakingPoint];
+                    nums[breakingPoint] = nums[i];
+                    nums[i] = temp;
+                    break; // Only once - most important
                 }
             }
         }
 
-        // 3. Reverse the suffix (everything after index)
-        reverse(nums, index + 1, n - 1);
+        // Step 3 : Sort the remaining portion other than prefix to get the next permutation
+        int start = breakingPoint + 1; int end = nums.length - 1;
+        while(start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+
+            start ++; end--;
+        }
     }
 }
 
 // TC : O(n)
 // SC : O(1)
+
