@@ -57,3 +57,32 @@ class Solution {
 
 // TC : O(n)
 // SC : O(n)
+
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s.length() != t.length()) return false;
+
+        // Use a fixed size array (26 for English alphabet)
+        int[] freq = new int[26];
+
+        // Increment for string s, decrement for string t
+        for (int i = 0; i < s.length(); i++) {
+            freq[s.charAt(i) - 'a']++;
+            freq[t.charAt(i) - 'a']--;
+        }
+
+        // If it's an anagram, all values must be 0
+        for (int val : freq) {
+            if (val != 0) return false;
+        }
+
+        return true;
+    }
+}
+// TC : O(n)
+// SC : O(1)
+
+
+// I'll use a frequency map to solve this in $O(n)$ time. If we're strictly limited to lowercase English letters, I can 
+// use a 26-size integer array to save space. However, if we need to support any Unicode character, a HashMap is the more 
+// robust choice. Which one would you prefer I implement?
