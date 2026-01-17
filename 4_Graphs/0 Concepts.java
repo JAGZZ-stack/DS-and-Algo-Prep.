@@ -6,7 +6,7 @@ public class Main {
     // 1. The Empty Cupboards (Declarations)
     // The "Hand-Holding" Cupboard: Stores the map of who is touching whom
     static ArrayList<ArrayList<Integer>> adjacency = new ArrayList<>();
-    
+
     // The "Group Roster" Cupboard: Stores the final lists of each friendship group
     static ArrayList<TreeSet<Integer>> components = new ArrayList<>();
     
@@ -269,6 +269,73 @@ public class Main {
             System.out.println("NO! They belong to different groups.");
             System.out.println("Kid " + x + " is in Group " + groupSticker[x]);
             System.out.println("Kid " + y + " is in Group " + groupSticker[y]);
+        }
+    }
+
+    public static void main(String[] args) {
+        solve();
+    }
+}
+
+// Bipartitie Graph
+import java.util.*;
+
+public class Main {
+    static ArrayList<ArrayList<Integer>> adjacency = new ArrayList<>();
+    static int[] color; // 0: unvisited, 1: Red, 2: Blue
+    static boolean isPossible = true; // To track if it's still bipartite
+
+    // --- THE BIPARTITE CHECK (Coloring DFS) ---
+    static void dfs(int node, int c) {
+        color[node] = c; // Give the kid a color (1 or 2)
+
+        for (int friend : adjacency.get(node)) {
+            if (color[friend] == 0) {
+                // If friend has no color, give them the OPPOSITE color
+                // 3 - 1 = 2 (Blue), 3 - 2 = 1 (Red)
+                dfs(friend, 3 - c);
+            } else if (color[friend] == color[node]) {
+                // OH NO! Friend has the SAME color as me. 
+                // This means two friends are in the same group.
+                isPossible = false;
+            }
+        }
+    }
+
+    public static void solve() {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt(); 
+        int m = sc.nextInt(); 
+
+        for (int i = 0; i <= n; i++) {
+            adjacency.add(new ArrayList<>());
+        }
+        color = new int[n + 1];
+
+        for (int i = 0; i < m; i++) {
+            int a = sc.nextInt();
+            int b = sc.nextInt();
+            adjacency.get(a).add(b);
+            adjacency.get(b).add(a);
+        }
+
+        // Check every kid (in case there are separate groups)
+        for (int i = 1; i <= n; i++) {
+            if (color[i] == 0) {
+                dfs(i, 1); // Start coloring this group starting with color 1
+            }
+        }
+
+        // --- FINAL REPORT ---
+        if (isPossible) {
+            System.out.println("YES, it is a Bipartite Graph!");
+            System.out.println("Group 1 (Red):");
+            for(int i=1; i<=n; i++) if(color[i] == 1) System.out.print(i + " ");
+            System.out.println("\nGroup 2 (Blue):");
+            for(int i=1; i<=n; i++) if(color[i] == 2) System.out.print(i + " ");
+        } else {
+            System.out.println("NO, it is not possible (found a conflict).");
         }
     }
 
