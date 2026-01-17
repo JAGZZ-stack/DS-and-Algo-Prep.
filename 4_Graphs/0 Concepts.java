@@ -94,7 +94,7 @@ public class Main {
     static int componentNumber = 0; // This is our final answer
 
     static void dfs(int node) {
-        vis[node] = 1; // Just put a generic "Checked" mark (1)
+        vis[node] = componentNumber; // Just put a generic "Checked" mark (1)
         
         // Follow the chain of hands to mark everyone in this group
         for (int friend : adjacency.get(node)) {
